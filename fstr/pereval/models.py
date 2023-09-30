@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Users(models.Model):
+class User(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=11)
     surname = models.CharField(max_length=255)
@@ -9,7 +9,7 @@ class Users(models.Model):
     patronym = models.CharField(max_length=255)
 
 
-class Coords(models.Model):
+class Coord(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     height = models.IntegerField()
@@ -29,10 +29,10 @@ class Pereval(models.Model):
     other_titles = models.CharField(max_length=255, blank=True)
     connect = models.CharField(max_length=255, blank=True)
     added_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(Users,
+    user = models.ForeignKey(User,
                              on_delete=models.SET_NULL,
                              null=True)
-    coord_id = models.ForeignKey(Coords,
+    coord_id = models.ForeignKey(Coord,
                                  on_delete=models.CASCADE)
     level_winter = models.CharField(max_length=5, blank=True)
     level_spring = models.CharField(max_length=5, blank=True)
