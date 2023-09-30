@@ -26,23 +26,23 @@ class Pereval(models.Model):
                               default='new')
     beauty_title = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    other_titles = models.CharField(max_length=255)
-    connect = models.CharField(max_length=255)
+    other_titles = models.CharField(max_length=255, blank=True)
+    connect = models.CharField(max_length=255, blank=True)
     added_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Users,
                              on_delete=models.SET_NULL,
                              null=True)
     coord_id = models.ForeignKey(Coords,
                                  on_delete=models.CASCADE)
-    level_winter = models.CharField(max_length=5)
-    level_spring = models.CharField(max_length=5)
-    level_summer = models.CharField(max_length=5)
-    level_autumn = models.CharField(max_length=5)
+    level_winter = models.CharField(max_length=5, blank=True)
+    level_spring = models.CharField(max_length=5, blank=True)
+    level_summer = models.CharField(max_length=5, blank=True)
+    level_autumn = models.CharField(max_length=5, blank=True)
 
 
 class Image(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True)
     image = models.BinaryField()
 
 
