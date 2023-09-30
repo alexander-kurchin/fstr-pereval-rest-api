@@ -1,3 +1,8 @@
 SECRET_KEY = 'django-insecure-bla-bla-bla'
 DEBUG = True
 ALLOWED_HOSTS = '127.0.0.1'
+
+FSTR_DB_LOGIN = 'postgres'
+FSTR_DB_PASS = 'password'
+FSTR_DB_HOST = 'localhost'
+FSTR_DB_PORT = '5432'
