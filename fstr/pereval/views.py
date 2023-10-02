@@ -1,30 +1,29 @@
-from rest_framework import generics, mixins, status, viewsets
-from rest_framework.response import Response
+from rest_framework import mixins, response, viewsets
 
 from .models import Pereval
 from .serializers import PerevalSerializer
 
 
-class PerevalViewSet(viewsets.ModelViewSet):
+class PerevalViewSet(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
     queryset = Pereval.objects.all()
     serializer_class = PerevalSerializer
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        if instance.status != 'new':
+            return response.Response({'state': '0',
+                                      'message': 'Status not new'})
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
 
-class PerevalAPI(mixins.CreateModelMixin,
-                 generics.GenericAPIView):
-    queryset = Pereval.objects.all()
-    serializer_class = PerevalSerializer
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
 
-    def post(self, request, *args, **kwargs):
-        serializer = PerevalSerializer(data=request.data)
-        if serializer.is_valid():
-            obj = serializer.save()
-            return Response({'status': status.HTTP_201_CREATED,
-                             'message': 'Запись успешно создана',
-                             'id': obj.id})
-        if status.HTTP_400_BAD_REQUEST:
-            return Response({'status': status.HTTP_400_BAD_REQUEST,
-                             'message': serializer.errors})
-        if status.HTTP_500_INTERNAL_SERVER_ERROR:
-            return Response({'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                             'message': serializer.errors})
+        return response.Response({'state': '1',
+                                  'message': 'Success'})
