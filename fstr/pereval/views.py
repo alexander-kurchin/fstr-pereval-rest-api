@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import mixins, response, viewsets
 
 from .models import Pereval
@@ -11,6 +12,8 @@ class PerevalViewSet(mixins.CreateModelMixin,
                      viewsets.GenericViewSet):
     queryset = Pereval.objects.all()
     serializer_class = PerevalSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ['user__email']
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -18,7 +21,9 @@ class PerevalViewSet(mixins.CreateModelMixin,
         if instance.status != 'new':
             return response.Response({'state': '0',
                                       'message': 'Status not new'})
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance,
+                                         data=request.data,
+                                         partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
